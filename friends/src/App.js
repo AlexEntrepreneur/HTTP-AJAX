@@ -7,7 +7,8 @@ class App extends Component {
     super();
     this.state = {
       friends: null,
-      error: null
+      error: null,
+      success: null
     }
   }
 
@@ -16,22 +17,40 @@ class App extends Component {
   }
 
   getFriendsData = () => {
-    this.resetErrorState();
+    this.resetResponseState();
     axios.get('http://localhost:5000/friends')
       .then(response => this.setFriendDataToState(response.data))
-      .catch(err => this.setErrorToState(err.message));
+      .catch(err => this.setResponseToState(null, err.message));
+  }
+
+  addFriendToData = () => {
+    const friend = {name: 'Sammy', age: 24, email: 'text@example.com'};
+    // Reflect change on frontend before sending to server
+    this.setState(currentState => ({
+      friends: currentState.friends.concat(friend)
+    }));
+
+    axios.post(`http://localhost:5000/friends`, friend)
+      .then(response => {
+        this.setFriendDataToState(response.data);
+        this.setResponseToState(response.statusText);
+      })
+      .catch(err => this.setResponseToState(null, err.message));
   }
 
   setFriendDataToState = data => {
     this.setState({ friends: data })
   }
 
-  setErrorToState = err => {
-    this.setState({ error: err });
+  setResponseToState = (success, err) => {
+    this.setState({
+      error: err || null,
+      success: success
+    });
   }
 
-  resetErrorState = () => {
-    this.setState({ error: null });
+  resetResponseState = () => {
+    this.setState({ error: null, success: null });
   }
 
   render() {
