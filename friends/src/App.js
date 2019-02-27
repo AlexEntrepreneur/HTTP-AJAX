@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import FriendsList from './components/FriendsList/FriendsList';
 import AddFriendForm from './components/AddFriendForm/AddFriendForm';
+import './App.css';
 
 class App extends Component {
   constructor() {

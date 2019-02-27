@@ -1,5 +1,6 @@
 import React, {  Component } from 'react';
 import { string, number } from 'prop-types';
+import './FriendCard.css';
 
 class FriendCard extends Component {
   render () {

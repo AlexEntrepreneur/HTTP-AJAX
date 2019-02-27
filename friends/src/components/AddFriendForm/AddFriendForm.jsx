@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import './AddFriendForm.css';
 
 class AddFriendForm extends React.Component {
   state = {
@@ -39,33 +40,35 @@ class AddFriendForm extends React.Component {
 
   render () {
     return (
-      <form onSubmit={(e) => this.onFriendFormSubmit(e)}>
-        <input
-          type="text"
-          name="name"
-          placeholder="name"
-          value={this.state.name}
-          onChange={(e) => this.onFormInputChange(e, e.target.name)}
-        />
-        <input
-          type="number"
-          name="age"
-          placeholder="age"
-          value={this.state.age}
-          onChange={(e) => this.onFormInputChange(e, e.target.name)}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="email"
-          value={this.state.email}
-          onChange={(e) => this.onFormInputChange(e, e.target.name)}
-        />
-        <button type="submit">Add Friend</button>
+      <div className="friend-form-container">
         {
           this.state.error && <p style={{color: "red"}}>please try again</p>
         }
-      </form>
+        <form onSubmit={(e) => this.onFriendFormSubmit(e)} className="friend-form">
+          <input
+            type="text"
+            name="name"
+            placeholder="name"
+            value={this.state.name}
+            onChange={(e) => this.onFormInputChange(e, e.target.name)}
+          />
+          <input
+            type="number"
+            name="age"
+            placeholder="age"
+            value={this.state.age}
+            onChange={(e) => this.onFormInputChange(e, e.target.name)}
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="email"
+            value={this.state.email}
+            onChange={(e) => this.onFormInputChange(e, e.target.name)}
+          />
+          <button type="submit">Add Friend</button>
+        </form>
+      </div>
     );
   }
 }
