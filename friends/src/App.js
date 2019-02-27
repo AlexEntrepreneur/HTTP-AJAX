@@ -19,10 +19,10 @@ class App extends Component {
   }
 
   getFriendsData = () => {
-    this.resetResponseState();
+    this.resetSuccessErrorState();
     axios.get('http://localhost:5000/friends')
       .then(response => this.setFriendDataToState(response.data))
-      .catch(err => this.setResponseToState(null, err.message));
+      .catch(err => this.setSuccessErrorToState(null, err.message));
   }
 
   addFriendToData = (friend) => {
@@ -34,23 +34,46 @@ class App extends Component {
     axios.post(`http://localhost:5000/friends`, friend)
       .then(response => {
         this.setFriendDataToState(response.data);
-        this.setResponseToState(response.statusText);
+        this.setSuccessErrorToState(response.statusText);
+        setTimeout(() => this.resetSuccessErrorState(), 3000);
       })
-      .catch(err => this.setResponseToState(null, err.message));
+      .catch(err => {
+        this.setSuccessErrorToState(null, 'failed to add friend');
+        setTimeout(() => window.location.reload(), 1000);
+      });
+  }
+
+  deleteFriendFromData = (id) => {
+    const friendsWithoutDeletedFriend = this.state.friends.filter(friend =>
+      friend.id !== id
+    );
+
+    this.setState({ friends: friendsWithoutDeletedFriend });
+
+    axios.delete(`http://localhost:5000/friends/${id}`)
+      .then(response => {
+        this.setFriendDataToState(response.data);
+        this.setSuccessErrorToState(response.statusText);
+        setTimeout(() => this.resetSuccessErrorState(), 3000);
+    })
+      .catch(err => {
+        this.setSuccessErrorToState(null, 'failed to delete friend');
+        setTimeout(() => window.location.reload(), 1000);
+      });
   }
 
   setFriendDataToState = data => {
-    this.setState({ friends: data })
+    this.setState({ friends: data });
   }
 
-  setResponseToState = (success, err) => {
+  setSuccessErrorToState = (success, err) => {
     this.setState({
       error: err || null,
       success: success
     });
   }
 
-  resetResponseState = () => {
+  resetSuccessErrorState = () => {
     this.setState({ error: null, success: null });
   }
 
@@ -70,7 +93,10 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <FriendsList friends={this.state.friends}/>
+        <FriendsList
+          friends={this.state.friends}
+          deleteFriendFunction={this.deleteFriendFromData}
+        />
         <AddFriendForm addFriend={this.addFriendToData}/>
       </div>
     );

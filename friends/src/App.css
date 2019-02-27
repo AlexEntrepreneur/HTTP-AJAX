@@ -21,6 +21,10 @@ body {
   height: 100vh;
 }
 
+.App {
+  width: 100%;
+}
+
 input {
   border: none;
   border-bottom: 3px solid #e1e4e8;
@@ -46,6 +50,7 @@ button {
   padding: .7rem 4rem;
   font-size: inherit;
   cursor: pointer;
+  background-color: #f0f0f0;
 }
 
 button:active {
