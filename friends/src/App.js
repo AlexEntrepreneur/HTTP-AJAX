@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import FriendsList from './components/FriendsList/FriendsList';
+import AddFriendForm from './components/AddFriendForm/AddFriendForm';
 
 class App extends Component {
   constructor() {
@@ -23,8 +24,7 @@ class App extends Component {
       .catch(err => this.setResponseToState(null, err.message));
   }
 
-  addFriendToData = () => {
-    const friend = {name: 'Sammy', age: 24, email: 'text@example.com'};
+  addFriendToData = (friend) => {
     // Reflect change on frontend before sending to server
     this.setState(currentState => ({
       friends: currentState.friends.concat(friend)
@@ -70,6 +70,7 @@ class App extends Component {
     return (
       <div className="App">
         <FriendsList friends={this.state.friends}/>
+        <AddFriendForm addFriend={this.addFriendToData}/>
       </div>
     );
   }
