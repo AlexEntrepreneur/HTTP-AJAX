@@ -31,10 +31,15 @@ class FriendForm extends React.Component {
             onChange={(e) => this.props.onFormInputChange(e, e.target.name)}
           />
           <div>
-            <button type="submit">{this.props.id ? 'Confirm' : 'Add Friend'}</button>
+            <button type="submit">{this.props.id ? 'confirm' : 'Add Friend'}</button>
             {
               this.props.id &&
-              <button onClick={this.props.clearFriendForm}>cancel</button>
+              <button
+                className="cancel-btn"
+                onClick={this.props.clearFriendForm}
+              >
+                cancel
+              </button>
             }
           </div>
         </form>
