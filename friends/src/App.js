@@ -14,13 +14,15 @@ class App extends Component {
     }
   }
 
+  apiURL = 'http://localhost:5000/friends';
+
   componentDidMount() {
     this.getFriendsData();
   }
 
   getFriendsData = () => {
     this.resetSuccessErrorState();
-    axios.get('http://localhost:5000/friends')
+    axios.get(this.apiURL)
       .then(response => this.setFriendDataToState(response.data))
       .catch(err => this.setSuccessErrorToState(null, err.message));
   }
@@ -31,7 +33,7 @@ class App extends Component {
       friends: currentState.friends.concat(friend)
     }));
 
-    axios.post(`http://localhost:5000/friends`, friend)
+    axios.post(this.apiURL, friend)
       .then(response => {
         this.setFriendDataToState(response.data);
         this.setSuccessErrorToState(response.statusText);
@@ -50,7 +52,7 @@ class App extends Component {
 
     this.setState({ friends: friendsWithoutDeletedFriend });
 
-    axios.delete(`http://localhost:5000/friends/${id}`)
+    axios.delete(`${this.apiURL}/${id}`)
       .then(response => {
         this.setFriendDataToState(response.data);
         this.setSuccessErrorToState(response.statusText);
