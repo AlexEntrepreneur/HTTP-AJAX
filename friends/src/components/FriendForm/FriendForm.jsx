@@ -2,78 +2,41 @@ import React from 'react';
 import './FriendForm.css';
 
 class FriendForm extends React.Component {
-  state = {
-    name: '',
-    age: 1,
-    email: '',
-    id: null,
-    error: null
-  }
-
-  onFormInputChange = (event, fieldName) => {
-    event.persist();
-    this.setState({ [fieldName]: event.target.value })
-  }
-
-  onFriendFormSubmit = (event) => {
-    event.preventDefault();
-    const { name, age, id, email } = this.state;
-    const friendFormIsFilled = name && email && age > 1;
-
-    if (friendFormIsFilled && !this.state.id) {
-      this.clearFriendForm();
-      const friend = { name, age: Number(age), email };
-      this.props.addFriend(friend);
-    }
-
-    else if (friendFormIsFilled && this.state.id) {
-      this.clearFriendForm();
-      const friend = { name, age: Number(age), email, id };
-      this.props.editFriend(friend);
-    }
-    else {
-      this.setState({ error: true });
-
-      setTimeout(() => {
-        // Display error message for N seconds
-        this.setState({ error: null });
-      }, 2000);
-    }
-  }
-
-  clearFriendForm = () => {
-    this.setState({ age: 1, name: '', email: ''});
-  }
-
   render () {
     return (
       <div className="friend-form-container">
         {
-          this.state.error && <p style={{color: "red"}}>please try again</p>
+          this.props.formError && <p className="danger-text">{'please try again'}</p>
         }
-        <form onSubmit={(e) => this.onFriendFormSubmit(e)} className="friend-form">
+        <form onSubmit={(e) => this.props.onFriendFormSubmit(e)} className="friend-form">
           <input
             type="text"
             name="name"
             placeholder="name"
-            value={this.state.name}
-            onChange={(e) => this.onFormInputChange(e, e.target.name)}
+            value={this.props.name}
+            onChange={(e) => this.props.onFormInputChange(e, e.target.name)}
           />
           <input
             type="number"
             name="age"
             placeholder="age"
-            value={this.state.age}
-            onChange={(e) => this.onFormInputChange(e, e.target.name)}
+            value={this.props.age}
+            onChange={(e) => this.props.onFormInputChange(e, e.target.name)}
           />
           <input
             type="email"
             name="email"
             placeholder="email"
-            value={this.state.email}
-            onChange={(e) => this.onFormInputChange(e, e.target.name)}
+            value={this.props.email}
+            onChange={(e) => this.props.onFormInputChange(e, e.target.name)}
           />
-          <button type="submit">Add Friend</button>
+          <div>
+            <button type="submit">{this.props.id ? 'Confirm' : 'Add Friend'}</button>
+            {
+              this.props.id &&
+              <button onClick={this.props.clearFriendForm}>cancel</button>
+            }
+          </div>
         </form>
       </div>
     );

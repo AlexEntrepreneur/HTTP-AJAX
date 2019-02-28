@@ -18,6 +18,7 @@ class FriendsList extends Component {
               email={friend.email}
               id={friend.id}
               deleteFriend={this.props.deleteFriendFunction}
+              getCurrentFriend={this.props.getCurrentFriendFunction}
             />
           )
         }

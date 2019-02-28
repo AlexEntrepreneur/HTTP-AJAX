@@ -10,7 +10,12 @@ class App extends Component {
     this.state = {
       friends: null,
       error: null,
-      success: null
+      success: null,
+      name: '',
+      age: 1,
+      email: '',
+      id: null,
+      formError: null
     }
   }
 
@@ -19,6 +24,8 @@ class App extends Component {
   componentDidMount() {
     this.getFriendsData();
   }
+
+  //====== API REQUEST CODE ======//
 
   getFriendsData = () => {
     this.resetSuccessErrorState();
@@ -54,7 +61,10 @@ class App extends Component {
     });
 
     // Reflect change on frontend before sending to server
-    this.setState({ friends: friendsWithEditedFriend });
+    this.setState({
+      friends: friendsWithEditedFriend,
+      currentFriend: null
+    });
 
     axios.put(`${this.apiURL}/${friend.id}`, friend)
       .then(response => {
@@ -87,6 +97,8 @@ class App extends Component {
       });
   }
 
+  //====== STATE UTILITY FUNCTIONS ======//
+
   setFriendDataToState = data => {
     this.setState({ friends: data });
   }
@@ -102,12 +114,58 @@ class App extends Component {
     this.setState({ error: null, success: null });
   }
 
+  getCurrentFriend = (friend) => {
+    // Get the current friend from edit button click callback
+    this.setState({
+      ...friend
+    });
+  }
+
+  //====== FORM HANDLING CODE ======//
+
+  onFormInputChange = (event, fieldName) => {
+    event.persist();
+    this.setState({ [fieldName]: event.target.value })
+  }
+
+  onFriendFormSubmit = (event) => {
+    event.preventDefault();
+    const { name, age, id, email } = this.state;
+    const friendFormIsFilled = name && email && age > 1;
+
+    if (friendFormIsFilled && !this.state.id) {
+      this.clearFriendForm();
+      const friend = { name, age: Number(age), email };
+      this.addFriendToData(friend);
+    }
+
+    else if (friendFormIsFilled && this.state.id) {
+      this.clearFriendForm();
+      const friend = { name, age: Number(age), email, id };
+      this.editFriendData(friend);
+    }
+    else {
+      this.setState({ formError: true });
+
+      setTimeout(() => {
+        // Display error message for N seconds
+        this.setState({ formError: null });
+      }, 2000);
+    }
+  }
+
+  clearFriendForm = () => {
+    this.setState({ age: 1, name: '', email: '', id: null});
+  }
+
+  //====== RENDER ======//
+
   render() {
     if (this.state.error) {
       return (
         <div>
           <h1>Sorry, something went wrong...</h1>
-          <h3 style={{color: "red"}}>{`${this.state.error}`}</h3>
+          <h3 className="danger-text">{`${this.state.error}`}</h3>
         </div>
       );
     }
@@ -121,10 +179,17 @@ class App extends Component {
         <FriendsList
           friends={this.state.friends}
           deleteFriendFunction={this.deleteFriendFromData}
+          getCurrentFriendFunction={this.getCurrentFriend}
         />
         <FriendForm
-          addFriend={this.addFriendToData}
-          editFriend={this.editFriendData}
+          clearFriendForm={this.clearFriendForm}
+          onFormInputChange={this.onFormInputChange}
+          onFriendFormSubmit={this.onFriendFormSubmit}
+          name={this.state.name}
+          age={this.state.age}
+          email={this.state.email}
+          id={this.state.id}
+          formError={this.state.formError}
         />
       </div>
     );
