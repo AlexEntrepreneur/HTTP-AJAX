@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import FriendsList from './components/FriendsList/FriendsList';
-import AddFriendForm from './components/AddFriendForm/AddFriendForm';
+import FriendForm from './components/FriendForm/FriendForm';
 import './App.css';
 
 class App extends Component {
@@ -41,6 +41,29 @@ class App extends Component {
       })
       .catch(err => {
         this.setSuccessErrorToState(null, 'failed to add friend');
+        setTimeout(() => window.location.reload(), 1000);
+      });
+  }
+
+  editFriendData = (friend) => {
+    const friendsWithEditedFriend = this.state.friends.map(fr => {
+      if (friend.id === fr.id) {
+        return friend;
+      }
+      return fr;
+    });
+
+    // Reflect change on frontend before sending to server
+    this.setState({ friends: friendsWithEditedFriend });
+
+    axios.put(`${this.apiURL}/${friend.id}`, friend)
+      .then(response => {
+        this.setFriendDataToState(response.data);
+        this.setSuccessErrorToState(response.statusText);
+        setTimeout(() => this.resetSuccessErrorState(), 3000);
+      })
+      .catch(err => {
+        this.setSuccessErrorToState(null, 'failed to edit friend');
         setTimeout(() => window.location.reload(), 1000);
       });
   }
@@ -99,7 +122,10 @@ class App extends Component {
           friends={this.state.friends}
           deleteFriendFunction={this.deleteFriendFromData}
         />
-        <AddFriendForm addFriend={this.addFriendToData}/>
+        <FriendForm
+          addFriend={this.addFriendToData}
+          editFriend={this.editFriendData}
+        />
       </div>
     );
   }

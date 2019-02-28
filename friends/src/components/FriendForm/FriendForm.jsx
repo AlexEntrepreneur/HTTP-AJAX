@@ -1,11 +1,12 @@
 import React from 'react';
-import './AddFriendForm.css';
+import './FriendForm.css';
 
-class AddFriendForm extends React.Component {
+class FriendForm extends React.Component {
   state = {
     name: '',
     age: 1,
     email: '',
+    id: null,
     error: null
   }
 
@@ -16,13 +17,19 @@ class AddFriendForm extends React.Component {
 
   onFriendFormSubmit = (event) => {
     event.preventDefault();
-    const { name, age, email } = this.state;
+    const { name, age, id, email } = this.state;
     const friendFormIsFilled = name && email && age > 1;
 
-    if (friendFormIsFilled) {
+    if (friendFormIsFilled && !this.state.id) {
       this.clearFriendForm();
-      const friend = {name: name, age: Number(age), email: email};
+      const friend = { name, age: Number(age), email };
       this.props.addFriend(friend);
+    }
+
+    else if (friendFormIsFilled && this.state.id) {
+      this.clearFriendForm();
+      const friend = { name, age: Number(age), email, id };
+      this.props.editFriend(friend);
     }
     else {
       this.setState({ error: true });
@@ -73,4 +80,4 @@ class AddFriendForm extends React.Component {
   }
 }
 
-export default AddFriendForm;
+export default FriendForm;
