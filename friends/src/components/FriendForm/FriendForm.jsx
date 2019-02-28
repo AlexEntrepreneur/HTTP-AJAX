@@ -2,13 +2,24 @@ import React from 'react';
 import './FriendForm.css';
 
 class FriendForm extends React.Component {
+  onFormKeyDown = (event) => {
+    event.persist();
+    if (event.key === 'Enter') {
+      this.props.onFriendFormSubmit(event);
+    }
+  }
+
   render () {
     return (
       <div className="friend-form-container">
         {
           this.props.formError && <p className="danger-text">{'please try again'}</p>
         }
-        <form onSubmit={(e) => this.props.onFriendFormSubmit(e)} className="friend-form">
+        <form
+          onSubmit={this.props.onFriendFormSubmit}
+          onKeyDown={this.onFormKeyDown}
+          className="friend-form"
+        >
           <input
             type="text"
             name="name"

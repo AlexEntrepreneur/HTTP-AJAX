@@ -4,6 +4,8 @@ import FriendsList from './components/FriendsList/FriendsList';
 import FriendForm from './components/FriendForm/FriendForm';
 import './App.css';
 
+const initialFriendFormState = { age: '', name: '', email: '', id: null };
+
 class App extends Component {
   constructor() {
     super();
@@ -11,11 +13,8 @@ class App extends Component {
       friends: null,
       error: null,
       success: null,
-      name: '',
-      age: 1,
-      email: '',
-      id: null,
-      formError: null
+      formError: null,
+      ...initialFriendFormState
     }
   }
 
@@ -130,32 +129,33 @@ class App extends Component {
 
   onFriendFormSubmit = (event) => {
     event.preventDefault();
-    const { name, age, id, email } = this.state;
-    const friendFormIsFilled = name && email && age > 1;
+    const friend = {
+      name: this.state.name,
+      age: this.state.age,
+      email: this.state.email
+    };
+    const friendFormIsFilled = friend.name && friend.email && friend.age > 1;
 
     if (friendFormIsFilled && !this.state.id) {
       this.clearFriendForm();
-      const friend = { name, age: Number(age), email };
-      this.addFriendToData(friend);
+      this.addFriendToData({ ...friend, age: Number(friend.age) });
     }
 
     else if (friendFormIsFilled && this.state.id) {
       this.clearFriendForm();
-      const friend = { name, age: Number(age), email, id };
-      this.editFriendData(friend);
+      this.editFriendData({ ...friend, age: Number(friend.age), id: this.state.id });
     }
+
     else {
       this.setState({ formError: true });
 
-      setTimeout(() => {
-        // Display error message for N seconds
-        this.setState({ formError: null });
-      }, 2000);
+      // Display error message for N seconds
+      setTimeout(() => this.setState({ formError: null }), 2000);
     }
   }
 
   clearFriendForm = () => {
-    this.setState({ age: 1, name: '', email: '', id: null});
+    this.setState({ ...initialFriendFormState });
   }
 
   //====== RENDER ======//
