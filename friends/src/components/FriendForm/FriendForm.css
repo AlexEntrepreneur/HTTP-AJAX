@@ -1,0 +1,23 @@
+.friend-form-container {
+  position: fixed;
+  bottom: 0;
+  padding-bottom: 2rem;
+  width: 100%;
+  text-align: center;
+
+}
+
+.friend-form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.friend-form input {
+  margin-right: 3rem;
+}
+
+.cancel-btn {
+  margin-left: 2rem;
+  background-color: unset;
+}

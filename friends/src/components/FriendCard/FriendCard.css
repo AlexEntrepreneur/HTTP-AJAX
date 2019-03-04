@@ -1,0 +1,22 @@
+.card.friend-card {
+  width: calc((100% / 4) - 10rem);
+  margin: 2rem;
+  padding-bottom: 3rem;
+  text-align: center;
+}
+
+.friend-card p:last-of-type {
+  margin-bottom: 5rem;
+}
+
+.delete-btn {
+  color: red;
+}
+
+.edit-btn {
+  margin-bottom: 1rem;
+}
+
+.edit-btn, .delete-btn {
+  width: 100%;
+}
